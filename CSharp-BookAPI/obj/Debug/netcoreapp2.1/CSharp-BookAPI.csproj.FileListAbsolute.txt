@@ -1,0 +1,14 @@
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\bin\Debug\netcoreapp2.1\CSharp-BookAPI.deps.json
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\bin\Debug\netcoreapp2.1\CSharp-BookAPI.runtimeconfig.json
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\bin\Debug\netcoreapp2.1\CSharp-BookAPI.runtimeconfig.dev.json
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\bin\Debug\netcoreapp2.1\CSharp-BookAPI.dll
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\bin\Debug\netcoreapp2.1\CSharp-BookAPI.pdb
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.csprojAssemblyReference.cache
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.csproj.CoreCompileInputs.cache
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.RazorAssemblyInfo.cache
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.RazorAssemblyInfo.cs
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.AssemblyInfoInputs.cache
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.AssemblyInfo.cs
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.dll
+C:\Users\Michael\IdeaProjects\CSharp-BookAPI\CSharp-BookAPI\obj\Debug\netcoreapp2.1\CSharp-BookAPI.pdb
