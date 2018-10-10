@@ -26,41 +26,55 @@ namespace CSharp_BookAPI.DataServices
 
         public Book GetBook(string _id)
         {
-            var book = collection.Find(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
-            if(book.CountDocuments() > 0){
+            ObjectId Object_id;
+            if (!ObjectId.TryParse(_id, out Object_id)) {
+                return new Book();
+            }
+
+            IFindFluent<Book, Book> book = collection.Find(new BsonDocument { { "_id", Object_id } });
+            if (book.CountDocuments() > 0)
+            {
                 return book.Single();
             }
-            else {
+            else
+            {
                 return new Book();
             }
         }
 
-        public Dictionary<string, string> CreateBook(Book book)
+        public string CreateBook(Book book)
         {
-            ObjectId newId = ObjectId.GenerateNewId();
-            book._id = newId;
-            collection.InsertOne(book);
-            return new Dictionary<string, string>(){
-                { "link", $"/{newId}" },
-            };
-        }
-
-        public Dictionary<string, string> UpdateBook(string _id, Book book)
-        {
-            book._id = ObjectId.Parse(_id);
-            ReplaceOneResult result = collection.ReplaceOne(new BsonDocument{{ "_id", ObjectId.Parse(_id) }}, book, new UpdateOptions { IsUpsert = true });
-            if (result.ModifiedCount > 0) {
-                return new Dictionary<string, string>(){
-                    { "link", $"/{_id}" },
-                };
+            ObjectId? Object_id;
+            if(book._id == null) {
+                Object_id = ObjectId.GenerateNewId();
+                book._id = Object_id;
             }
-            return new Dictionary<string, string>(){
-                { "link", $"/{result.UpsertedId}" },
-            };
+            else {
+                if (book._id.ToString() == "000000000000000000000000"){
+                    return "The id given is not a valid id";
+                }
+                else {
+                    Object_id = book._id;
+                }
+            }
+            collection.InsertOne(book);
+            return $"link: /{Object_id}";
         }
 
-        public bool DeleteBook(string _id){
-            if (GetBook(_id)._id == null) {
+        public ReplaceOneResult UpdateBook(string _id, Book book)
+        {
+            ObjectId Object_id;
+            if (!ObjectId.TryParse(_id, out Object_id)) {
+                return null;
+            }
+            book._id = Object_id;
+            return collection.ReplaceOne(new BsonDocument { { "_id", Object_id } }, book, new UpdateOptions { IsUpsert = true });
+        }
+
+        public bool DeleteBook(string _id)
+        {
+            if (GetBook(_id)._id == null)
+            {
                 return false;
             }
 

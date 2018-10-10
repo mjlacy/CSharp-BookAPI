@@ -8,8 +8,25 @@ namespace CSharp_BookAPI.Models
     [BsonIgnoreExtraElements]
     public class Book
     {
+        [JsonIgnore]
         [BsonElement("_id")]
         public ObjectId? _id { get; set; }
+
+        [JsonProperty("_id")]
+        [BsonIgnore]
+        public string _id_serialized
+        {
+            get => _id.ToString();
+            set {
+                ObjectId Object_id;
+                if( ObjectId.TryParse(value, out Object_id)){
+                    _id = Object_id;
+                } 
+                else {
+                    _id = ObjectId.Parse("000000000000000000000000");
+                }}
+
+        }
 
         [JsonProperty("bookId")]
         public int bookId { get; set; }
@@ -25,7 +42,7 @@ namespace CSharp_BookAPI.Models
 
         public Book() {}
 
-        public Book(ObjectId? _id, int bookId, string title, string author, int year)
+        public Book(ObjectId _id, int bookId, string title, string author, int year)
         {
             this._id = _id;
             this.bookId = bookId;

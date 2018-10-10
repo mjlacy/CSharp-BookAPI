@@ -10,9 +10,9 @@ namespace CSharp_BookAPI.DataServices
 
         Book GetBook(string _id);
 
-        Dictionary<string, string> CreateBook(Book book);
+        string CreateBook(Book book);
 
-        Dictionary<string, string> UpdateBook(string _id, Book book);
+        ReplaceOneResult UpdateBook(string _id, Book book);
 
         bool DeleteBook(string _id);
     }
