@@ -25,7 +25,6 @@ namespace CSharp_BookAPI.Models
                 else {
                     _id = ObjectId.Parse("000000000000000000000000");
                 }}
-
         }
 
         [JsonProperty("bookId")]

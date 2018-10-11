@@ -32,8 +32,9 @@ namespace CSharp_BookAPI.Controllers
                 books.StatusCode = 200;
                 return books;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Exception Thrown: " + ex);
                 JsonResult error = new JsonResult("An error occured while processing your request.");
                 error.StatusCode = 500;
                 return error;
@@ -47,7 +48,7 @@ namespace CSharp_BookAPI.Controllers
             try
             {
                 JsonResult response;
-                if (BookDataFactory.GetBook(id)._id != null) {
+                if (BookDataFactory.GetBook(id) != null) {
 
                     response = new JsonResult(BookDataFactory.GetBook(id));
                     response.StatusCode = 200;
@@ -58,8 +59,9 @@ namespace CSharp_BookAPI.Controllers
                 }
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Exception Thrown: " + ex);
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -81,8 +83,9 @@ namespace CSharp_BookAPI.Controllers
                 }
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Exception Thrown: " + ex);
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -110,8 +113,9 @@ namespace CSharp_BookAPI.Controllers
                 }
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Exception Thrown: " + ex);
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -134,8 +138,9 @@ namespace CSharp_BookAPI.Controllers
                 }
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Exception Thrown: " + ex);
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;

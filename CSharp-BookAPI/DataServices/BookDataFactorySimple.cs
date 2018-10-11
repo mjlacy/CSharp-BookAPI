@@ -28,7 +28,7 @@ namespace CSharp_BookAPI.DataServices
         {
             ObjectId Object_id;
             if (!ObjectId.TryParse(_id, out Object_id)) {
-                return new Book();
+                return null;
             }
 
             IFindFluent<Book, Book> book = collection.Find(new BsonDocument { { "_id", Object_id } });
@@ -38,7 +38,7 @@ namespace CSharp_BookAPI.DataServices
             }
             else
             {
-                return new Book();
+                return null;
             }
         }
 
@@ -73,12 +73,12 @@ namespace CSharp_BookAPI.DataServices
 
         public bool DeleteBook(string _id)
         {
-            if (GetBook(_id)._id == null)
+            if (GetBook(_id) == null)
             {
                 return false;
             }
 
-            DeleteResult result = collection.DeleteOne(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
+            collection.DeleteOne(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
             return true;
         }
     }
