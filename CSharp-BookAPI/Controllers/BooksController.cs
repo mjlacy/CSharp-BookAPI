@@ -12,6 +12,14 @@ namespace CSharp_BookAPI.Controllers
     public class BooksController : Controller
     {
         public IBookDataFactory BookDataFactory = new BookDataFactorySimple();
+        int x;
+
+        public BooksController(){
+            int x = 5;
+            System.Console.WriteLine("=============================");
+            System.Console.WriteLine(x); //This works
+            System.Console.WriteLine("=============================");
+        }
 
         [HttpGet("health")]
         [EnableCors("CorsPolicy")]

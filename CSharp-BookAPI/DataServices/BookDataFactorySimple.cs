@@ -15,6 +15,10 @@ namespace CSharp_BookAPI.DataServices
         static IMongoDatabase database = client.GetDatabase("books");
         IMongoCollection<Book> collection = database.GetCollection<Book>("books");
 
+        public BookDataFactorySimple(){}
+
+        public BookDataFactorySimple(Object collection){}
+
         public Books GetBooks()
         {
             List<Book> booksList = collection.AsQueryable().ToList();
