@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 namespace CSharp_BookAPI.Controllers
 {
     [Route("/")]
+    //TODO See if EnableCors can be done at class level
+    //TODO Add Location header and return object where possible
+    //TODO Use Matched Count on Delete so that false can be used for invalid id instead
     public class BooksController : Controller
     {
         public IBookDataFactory BookDataFactory = new BookDataFactorySimple();
@@ -34,7 +37,7 @@ namespace CSharp_BookAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Thrown: " + ex);
+                Console.WriteLine($"Exception Thrown: {ex}");
                 JsonResult error = new JsonResult("An error occured while processing your request.");
                 error.StatusCode = 500;
                 return error;
@@ -61,7 +64,7 @@ namespace CSharp_BookAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Thrown: " + ex);
+                Console.WriteLine($"Exception Thrown: {ex}");
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -85,7 +88,7 @@ namespace CSharp_BookAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Thrown: " + ex);
+                Console.WriteLine($"Exception Thrown: {ex}");
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -93,11 +96,11 @@ namespace CSharp_BookAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBook(string id, [FromBody] Newtonsoft.Json.Linq.JObject body)
+        public IActionResult UpsertBook(string id, [FromBody] Newtonsoft.Json.Linq.JObject body)
         {
             try
             {
-                var result = BookDataFactory.UpdateBook(id, JsonConvert.DeserializeObject<Book>(body.ToString()));
+                var result = BookDataFactory.UpsertBook(id, JsonConvert.DeserializeObject<Book>(body.ToString()));
                 JsonResult response;
                 if(result == null){
                     response = new JsonResult("The id you specified is not a valid id");
@@ -115,7 +118,36 @@ namespace CSharp_BookAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Thrown: " + ex);
+                Console.WriteLine($"Exception Thrown: {ex}");
+                JsonResult error = new JsonResult("An error occured while processing your request");
+                error.StatusCode = 500;
+                return error;
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdateBook(string id, [FromBody] Newtonsoft.Json.Linq.JObject body){
+            try
+            {
+                var result = BookDataFactory.UpdateBook(id, body);
+                JsonResult response;
+                if(result == null){
+                    response = new JsonResult("The id you specified is not a valid id");
+                    response.StatusCode = 400;
+                }
+                else if (result.MatchedCount == 0){
+                    response = new JsonResult($"No object with an id of: {id} found to delete");
+                    response.StatusCode = 404;
+                }
+                else {
+                    response = new JsonResult($"link: /{id}");
+                    response.StatusCode = 200;
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception Thrown: {ex}");
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;
@@ -129,18 +161,18 @@ namespace CSharp_BookAPI.Controllers
             {
                 JsonResult response;
                 if (BookDataFactory.DeleteBook(id)){
-                    response = new JsonResult("Object with id: " + id + " deleted successfully");
+                    response = new JsonResult($"Object with id: {id} deleted successfully");
                     response.StatusCode = 200;
                 }
                 else {
-                    response = new JsonResult("No object with an id of: " + id + " found to delete");
+                    response = new JsonResult($"No object with an id of: {id} found to delete");
                     response.StatusCode = 404;
                 }
                 return response;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Thrown: " + ex);
+                Console.WriteLine($"Exception Thrown: {ex}");
                 JsonResult error = new JsonResult("An error occured while processing your request");
                 error.StatusCode = 500;
                 return error;

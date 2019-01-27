@@ -12,7 +12,9 @@ namespace CSharp_BookAPI.DataServices
 
         string CreateBook(Book book);
 
-        ReplaceOneResult UpdateBook(string _id, Book book);
+        ReplaceOneResult UpsertBook(string _id, Book book);
+
+        UpdateResult UpdateBook(string _id, object book);
 
         bool DeleteBook(string _id);
     }

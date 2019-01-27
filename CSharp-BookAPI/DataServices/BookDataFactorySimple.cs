@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CSharp_BookAPI.DataServices
 {
@@ -17,7 +18,7 @@ namespace CSharp_BookAPI.DataServices
 
         public Books GetBooks()
         {
-            List<Book> booksList = collection.AsQueryable().ToList();
+            List<Book> booksList = collection.Find(new BsonDocument{}).ToList();
 
             Books books = new Books(booksList);
 
@@ -49,26 +50,32 @@ namespace CSharp_BookAPI.DataServices
                 Object_id = ObjectId.GenerateNewId();
                 book._id = Object_id;
             }
-            else {
-                if (book._id.ToString() == "000000000000000000000000"){
-                    return "The id given is not a valid id";
-                }
-                else {
-                    Object_id = book._id;
-                }
+            else { 
+                Object_id = book._id;
             }
             collection.InsertOne(book);
             return $"link: /{Object_id}";
         }
 
-        public ReplaceOneResult UpdateBook(string _id, Book book)
+        public ReplaceOneResult UpsertBook(string _id, Book book)
         {
             ObjectId Object_id;
             if (!ObjectId.TryParse(_id, out Object_id)) {
                 return null;
             }
             book._id = Object_id;
+
             return collection.ReplaceOne(new BsonDocument { { "_id", Object_id } }, book, new UpdateOptions { IsUpsert = true });
+        }
+
+        public UpdateResult UpdateBook(string _id, object book)
+        {
+            ObjectId Object_id;
+            if (!ObjectId.TryParse(_id, out Object_id)) {
+                return null;
+            }
+
+            return collection.UpdateOne(new BsonDocument { { "_id", Object_id } }, new BsonDocument {{"$set", BsonDocument.Parse(book.ToString())}});
         }
 
         public bool DeleteBook(string _id)
@@ -77,6 +84,11 @@ namespace CSharp_BookAPI.DataServices
             {
                 return false;
             }
+            
+            // ObjectId Object_id;
+            // if (!ObjectId.TryParse(_id, out Object_id)) {
+            //     return null;
+            // }
 
             collection.DeleteOne(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
             return true;

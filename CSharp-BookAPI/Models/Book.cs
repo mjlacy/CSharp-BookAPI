@@ -23,7 +23,7 @@ namespace CSharp_BookAPI.Models
                     _id = Object_id;
                 } 
                 else {
-                    _id = ObjectId.Parse("000000000000000000000000");
+                    _id = null;
                 }}
         }
 
