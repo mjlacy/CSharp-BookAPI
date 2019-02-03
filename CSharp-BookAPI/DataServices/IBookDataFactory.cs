@@ -6,16 +6,17 @@ namespace CSharp_BookAPI.DataServices
 {
     public interface IBookDataFactory
     {
+        bool Health();
         Books GetBooks();
 
         Book GetBook(string _id);
 
-        string CreateBook(Book book);
+        Book CreateBook(Book book);
 
         ReplaceOneResult UpsertBook(string _id, Book book);
 
         UpdateResult UpdateBook(string _id, object book);
 
-        bool DeleteBook(string _id);
+        DeleteResult DeleteBook(string _id);
     }
 }

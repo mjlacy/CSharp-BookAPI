@@ -9,24 +9,35 @@ using Newtonsoft.Json;
 namespace CSharp_BookAPI.Controllers
 {
     [Route("/")]
-    //TODO See if EnableCors can be done at class level
-    //TODO Add Location header and return object where possible
-    //TODO Use Matched Count on Delete so that false can be used for invalid id instead
+    [EnableCors("CorsPolicy")]
     public class BooksController : Controller
     {
         public IBookDataFactory BookDataFactory = new BookDataFactorySimple();
 
         [HttpGet("health")]
-        [EnableCors("CorsPolicy")]
         public IActionResult Health()
         {
-            JsonResult result = new JsonResult("ok");
-            result.StatusCode = 200;
-            return result;
+            try{
+               if (BookDataFactory.Health()){
+                    JsonResult result = new JsonResult("ok");
+                    result.StatusCode = 200;
+                    return result;
+                } else {
+                    JsonResult result = new JsonResult("Error connecting to database");
+                    result.StatusCode = 500;
+                    return result;
+                } 
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Exception Thrown: {ex}");
+                JsonResult result = new JsonResult("Error connecting to database");
+                result.StatusCode = 500;
+                return result;
+            }
+            
         }
 
         [HttpGet()]
-        [EnableCors("CorsPolicy")]
         public IActionResult GetBooks()
         {
             try
@@ -45,16 +56,15 @@ namespace CSharp_BookAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [EnableCors("CorsPolicy")]
         public IActionResult GetBook(string id)
         {
             try
             {
                 JsonResult response;
                 if (BookDataFactory.GetBook(id) != null) {
-
                     response = new JsonResult(BookDataFactory.GetBook(id));
                     response.StatusCode = 200;
+                    Response.Headers.Add("Location", $"/{id}");
                 }
                 else {
                     response = new JsonResult("No book found with that id");
@@ -76,14 +86,10 @@ namespace CSharp_BookAPI.Controllers
         {
             try
             {
-                string result = BookDataFactory.CreateBook(JsonConvert.DeserializeObject<Book>(body.ToString()));
+                Book result = BookDataFactory.CreateBook(JsonConvert.DeserializeObject<Book>(body.ToString()));
                 JsonResult response = new JsonResult(result);
-                if (result == "The id given is not a valid id"){
-                    response.StatusCode = 400;
-                }
-                else {
-                    response.StatusCode = 201;
-                }
+                response.StatusCode = 201;
+                Response.Headers.Add("Location", $"/{result._id}");
                 return response;
             }
             catch (Exception ex)
@@ -106,12 +112,12 @@ namespace CSharp_BookAPI.Controllers
                     response = new JsonResult("The id you specified is not a valid id");
                     response.StatusCode = 400;
                 }
-                else if(result.UpsertedId != null){
-                    response = new JsonResult($"link: /{result.UpsertedId}");
+                response = new JsonResult(body);
+                Response.Headers.Add("Location", $"/{id}");
+                if(result.UpsertedId != null){
                     response.StatusCode = 201;
                 }
                 else {
-                    response = new JsonResult($"link: /{id}");
                     response.StatusCode = 200;
                 }
                 return response;
@@ -136,11 +142,12 @@ namespace CSharp_BookAPI.Controllers
                     response.StatusCode = 400;
                 }
                 else if (result.MatchedCount == 0){
-                    response = new JsonResult($"No object with an id of: {id} found to delete");
+                    response = new JsonResult($"No object with an id of: {id} found to modify");
                     response.StatusCode = 404;
                 }
                 else {
-                    response = new JsonResult($"link: /{id}");
+                    response = new JsonResult(new Newtonsoft.Json.Linq.JObject());
+                    Response.Headers.Add("Location", $"/{id}");
                     response.StatusCode = 200;
                 }
                 return response;
@@ -160,7 +167,7 @@ namespace CSharp_BookAPI.Controllers
             try
             {
                 JsonResult response;
-                if (BookDataFactory.DeleteBook(id)){
+                if (BookDataFactory.DeleteBook(id).DeletedCount > 0){
                     response = new JsonResult($"Object with id: {id} deleted successfully");
                     response.StatusCode = 200;
                 }

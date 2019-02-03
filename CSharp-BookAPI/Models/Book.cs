@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace CSharp_BookAPI.Models
 {
-    [BsonIgnoreExtraElements]
     public class Book
     {
         [JsonIgnore]

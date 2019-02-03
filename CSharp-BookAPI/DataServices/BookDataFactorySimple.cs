@@ -16,12 +16,14 @@ namespace CSharp_BookAPI.DataServices
         static IMongoDatabase database = client.GetDatabase("books");
         IMongoCollection<Book> collection = database.GetCollection<Book>("books");
 
+        public bool Health() {
+            BsonDocument ping = database.RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+            return ping.GetValue("ok") == 1;
+        }
         public Books GetBooks()
         {
             List<Book> booksList = collection.Find(new BsonDocument{}).ToList();
-
             Books books = new Books(booksList);
-
             return books;
         }
 
@@ -43,7 +45,7 @@ namespace CSharp_BookAPI.DataServices
             }
         }
 
-        public string CreateBook(Book book)
+        public Book CreateBook(Book book)
         {
             ObjectId? Object_id;
             if(book._id == null) {
@@ -54,7 +56,7 @@ namespace CSharp_BookAPI.DataServices
                 Object_id = book._id;
             }
             collection.InsertOne(book);
-            return $"link: /{Object_id}";
+            return book;
         }
 
         public ReplaceOneResult UpsertBook(string _id, Book book)
@@ -78,20 +80,14 @@ namespace CSharp_BookAPI.DataServices
             return collection.UpdateOne(new BsonDocument { { "_id", Object_id } }, new BsonDocument {{"$set", BsonDocument.Parse(book.ToString())}});
         }
 
-        public bool DeleteBook(string _id)
+        public DeleteResult DeleteBook(string _id)
         {
-            if (GetBook(_id) == null)
-            {
-                return false;
+            ObjectId Object_id;
+            if (!ObjectId.TryParse(_id, out Object_id)) {
+                return null;
             }
-            
-            // ObjectId Object_id;
-            // if (!ObjectId.TryParse(_id, out Object_id)) {
-            //     return null;
-            // }
 
-            collection.DeleteOne(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
-            return true;
+            return collection.DeleteOne(new BsonDocument { { "_id", ObjectId.Parse(_id) } });
         }
     }
 }
