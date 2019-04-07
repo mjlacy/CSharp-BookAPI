@@ -7,7 +7,8 @@ namespace CSharp_BookAPI.DataServices
     public interface IBookDataFactory
     {
         bool Health();
-        Books GetBooks();
+
+        Books GetBooks(Book book);
 
         Book GetBook(string _id);
 

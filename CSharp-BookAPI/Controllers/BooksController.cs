@@ -38,11 +38,11 @@ namespace CSharp_BookAPI.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetBooks()
+        public IActionResult GetBooks(int bookId, string title, string author, int year)
         {
             try
             {
-                JsonResult books = new JsonResult(BookDataFactory.GetBooks());
+                JsonResult books = new JsonResult(BookDataFactory.GetBooks(new Book(bookId, title, author, year)));
                 books.StatusCode = 200;
                 return books;
             }

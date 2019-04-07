@@ -20,9 +20,24 @@ namespace CSharp_BookAPI.DataServices
             BsonDocument ping = database.RunCommand<BsonDocument>(new BsonDocument("ping", 1));
             return ping.GetValue("ok") == 1;
         }
-        public Books GetBooks()
-        {
-            List<Book> booksList = collection.Find(new BsonDocument{}).ToList();
+        public Books GetBooks(Book book)
+        {   
+            Dictionary<string, object> conditions = new Dictionary<string, object>();
+
+            if (book.bookId != 0) {
+                conditions["bookId"] = book.bookId;
+            }
+            if (book.title != null) {
+                conditions["title"] = book.title;
+            }
+            if (book.author != null) {
+                conditions["author"] = book.author;
+            }
+            if (book.year != 0) {
+                conditions["year"] = book.year;
+            }
+            
+            List<Book> booksList = collection.Find(conditions.ToBsonDocument()).ToList();
             Books books = new Books(booksList);
             return books;
         }

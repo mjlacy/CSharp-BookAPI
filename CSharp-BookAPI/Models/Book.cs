@@ -40,6 +40,14 @@ namespace CSharp_BookAPI.Models
 
         public Book() {}
 
+        public Book(int bookId, string title, string author, int year)
+        {
+            this.bookId = bookId;
+            this.title = title;
+            this.author = author;
+            this.year = year;
+        }
+
         public Book(ObjectId _id, int bookId, string title, string author, int year)
         {
             this._id = _id;
